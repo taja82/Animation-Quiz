@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrapper, html, body {
+    height: 100%;
+    margin: 0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* header */
+#topRow {
+    background-color: black;
+    color: white;
+}
+
+/* footer */
+#bottomRow {
+    background-color: #333333;
+    color: white;
+}
+
+/* main */
+#centralRow {
+  display: flex;
+  align-items: stretch;
+  flex-direction:row;
+}
+
+/* sidebar */
+#sidebarColumn {
+    background-color: #B83B1D;
+    color: white;
+    width:20%;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebarColumn nav {
+  padding:1em;
+  border:1px solid yellow;
+  flex:1;
+}
+
+/* content */
+#contentColumn {
+  overflow: auto;
+  flex:1;
+}
+
+.big {
+  border:1px solid red;
+  margin:1em;
+  height:400px;
+}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        <div id="topRow">
+          header
+        </div>
+      
+        <div id="centralRow">
+          <div id="sidebarColumn">
+            sidebar
+            <nav>
+              nav links
+            </nav>
+          </div>
+          <div id="contentColumn">
+            body content
+            <div class="big">some big content</div>
+          </div>
+        </div>
+      
+        <div id="bottomRow">
+          footer
+        </div>
+      </div>
+      
+</body>
+</html>

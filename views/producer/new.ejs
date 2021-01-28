@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/semantic/semantic.min.css">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+  <div class="ui main text container">
+
+    <form class="ui form segment" action="/producer" method="post" enctype="multipart/form-data" novalidate>
+      <div class="field">
+        <label for="producer">이름</label>
+        <input type="text" name="producer" id="producer" />
+      </div>
+      <div class="field">
+        <label for="attach">소속사</label>
+        <input type="text" name="producer" id="attach" />
+      </div>
+      <div class="field">
+        <label for="image">사잔</label>
+        <input type="file" id="image"/>
+      </div>
+      <button type="button" class="ui button" id="edaddBtn">추가</button>
+  </div>
+  <hr>
+  <div style="display:flex;justify-content:flex-end;">
+    <button type="button" id="cancelBtn" class="ui black deny button">취소</button>
+    <button type="submit" id="submitBtn" class="ui positive submit button">추가</button>
+  </div>
+  </form>
+  </div>
+  <form class="ui form segment error">
+    <div class="field error">
+      <label>Test Field</label>
+      <input placeholder="Test Field" name="name" type="text">
+      <div class="ui basic red pointing prompt label transition visible" style="display: inline-block !important;">
+        Please enter your name</div>
+    </div>
+    <div class="ui primary submit button">Submit</div>
+    <div class="ui reset button">Reset</div>
+    <div class="ui clear button">Clear</div>
+  </form>
+  <button class="ui button" id="dark_Btn">
+    다크모드
+  </button>
+
+  <% include ../footer %>
+
+  <script src="/js/jquery.min.js"></script>
+  <script src="/semantic/semantic.min.js"></script>
+  <script src="/js/kuroshiro.min.js"></script>
+  <script src="/js/kuroshiro-analyzer-kuromoji.min.js"></script>
+  <script>
+    var kuroshiro = new Kuroshiro();
+    kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/jp/dict" }));
+    $("#titlejp").blur(function () {
+      kuroshiro.convert($(this).val(), { to: "romaji", mode: "spaced", romajiSystem: "passport" }).then(function (result) {
+        $("#titleromi").val(result);
+      });
+    })
+  </script>
+  <script>
+    $('.ui.dropdown').dropdown({});
+
+    $('#example8').calendar({
+      startMode: 'year',
+      type: 'month',
+      text: {
+        days: ['일', '월', '화', '수', '목', '금', '토'],
+        months: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthsShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        today: '오늘',
+        now: '현재',
+        am: '오전',
+        pm: '오후'
+      },
+      formatter: {
+        date: function (date) {
+          if (!date) return '';
+          var day = date.getDate();
+          var month = date.getMonth() + 1;
+          var year = date.getFullYear();
+          return year + "년 " + month + "월";
+        }
+      }
+    });
+  </script>
+  <script>
+    var op_num = 1;
+    var ed_num = 1;
+    $("#opcontent").on("click", ".opchangeBtn", function () {
+      console.log(true);
+      $(this).siblings("input").toggle();
+      //$(".opinput.toggle").toggle();
+    });
+
+
+    $("#edcontent").on("click", ".edchangeBtn", function () {
+      console.log(true);
+      $(this).siblings("input").toggle();
+      //$(".opinput.toggle").toggle();
+    });
+    var op = $(".op");
+    var ed = $(".ed");
+    var ophtml;
+    var edhtml;
+    $("#opaddBtn").on("click", function () {
+      ophtml =
+        `
+        <div class="item">
+          <div class="op middle aligned content">
+            <div style="display:flex;">
+              <div style="display:flex;align-items: center;padding:5px;justify-content: center;">
+                오프닝${op_num}
+              </div>
+              <div style="flex-grow: 1;display:flex;">
+                <input type="file" name="opfile" class="toggle opinput" style="display:none;" accept="video/*">
+                <input type="text" name="opurl" class="toggle opinput" placeholder="오프닝 URL 입력">
+                <button type="button" class="ui button opchangeBtn" style="flex-shrink:0">전환</button>
+              </div>
+            </div>
+            <div>
+              <input type="text" name="optitle" class="optitle" placeholder="오프닝 제목">
+            </div>
+            <div style="display:flex;vertical-align:middle;align-items: center;">
+              <div class="ui input" style="flex-grow:1;">
+                <input type="number" name="OPrange_start" class="OPrange_start"/>
+              </div>
+              <div style="flex-shrink: 0; padding:5px;">화 부터</div>
+              <div style="flex-shrink: 0; padding:5px;"> ~ </div>
+              <div class="ui input" style="flex-grow:1;">
+                <input type="number" name="OPrange_end" class="OPrange_end"/>
+              </div>
+              <div style="flex-shrink: 0; padding:5px;">화 까지</div>
+            </div>
+          </div>
+        </div>
+      `;
+      if (op_num <= $("#episode").val()) {
+        $("#opnum").val(op_num);
+        op_num++;
+        $("#opcontent").append(ophtml);
+      } else {
+
+      }
+    });
+
+    $("#edaddBtn").on("click", function () {
+      edhtml =
+        `
+        <div class="item">
+          <div class="ed middle aligned content">
+            <div style="display:flex;">
+              <div style="display:flex;align-items: center;padding:5px;justify-content: center;">
+                엔딩${ed_num}
+              </div>
+              <div style="flex-grow: 1;display:flex;">
+                <input type="file" name="edfile" class="toggle edinput" style="display:none;" accept="video/*">
+                <input type="text" name="edurl" class="toggle edinput" placeholder="엔딩 URL 입력">
+                <button type="button" class="ui button edchangeBtn" style="flex-shrink:0">전환</button>
+              </div>
+            </div>
+            <div>
+              <input type="text" name="edtitle" class="edtitle" placeholder="엔딩 제목">
+            </div>
+            <div style="display:flex;vertical-align:middle;align-items: center;">
+              <div class="ui input" style="flex-grow:1;">
+                <input type="number" name="EDrange_start" class="EDrange_start"/>
+              </div>
+              <div style="flex-shrink: 0; padding:5px;">화 부터</div>
+              <div style="flex-shrink: 0; padding:5px;"> ~ </div>
+              <div class="ui input" style="flex-grow:1;">
+                <input type="number" name="EDrange_end" class="EDrange_end"/>
+              </div>
+              <div style="flex-shrink: 0; padding:5px;">화 까지</div>
+            </div>
+          </div>
+        </div>
+      `;
+      if (ed_num <= $("#episode").val()) {
+        $("#ednum").val(ed_num);
+        ed_num++;
+        $("#edcontent").append(edhtml);
+      } else {
+
+      }
+    });
+
+    $('.ui.range.slider').slider({
+      min: 5,
+      max: 100,
+      start: 10,
+      end: 90,
+      step: 5
+    });
+
+    $(".ui.form").form({
+      fields: {
+        name: {
+          identifier: 'name',
+          rules: [
+            {
+              type: 'empty',
+              prompt: 'Please enter your name'
+            }
+          ]
+        }
+      }
+    });
+
+  </script>
+  <script>
+    $("#cancelBtn").on("click", function () {
+      //location.href = "/anime";
+      history.go(-1);
+    });
+  </script>
+  <script>
+    $("#dark_Btn").click(function () {
+      $(".ui").toggleClass("inverted");
+    });
+  </script>
+</body>
+
+</html>

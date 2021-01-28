@@ -1,0 +1,31 @@
+a {
+  color: #00B7FF;
+}
+
+html, body {
+  height:100%;
+}
+
+.require:after {
+  padding-left:5px;
+  color:red;
+  content:'*';
+}
+
+.main {
+  margin:20px 0;
+}
+
+.op, .op > div, .ed, .ed > div {
+  padding: 5px;
+}
+
+.opinput {
+  flex-grow:1;
+  height:44px;
+}
+
+input[type=file] {
+  text-overflow:ellipsis;
+  overflow:hidden;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/semantic/semantic.min.css">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+  <table class="table table-striped posts">
+    <colgroup>
+      <col style="width:400px" />
+      <col>
+      <col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>아이콘</th>
+        <th>국가</th>
+        <th>국가코드</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(posts == null || posts.length == 0){ %>
+      <tr>
+        <td class="noData" colspan=100> 항목이 없습니다. </td>
+      </tr>
+      <% } %>
+      <% posts.forEach(function(post) { %>
+      <tr>
+        <td><i class="<%=post.country_code%> flag"></i></td>
+        <td class="title">
+          <a href="/posts/<%= post._id %>"><%= post.country%></a>
+        </td>
+        <td class="author">
+          <%=post.country_code%>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <input type="button" value="추가" id="add_Btn">
+  <script src="/js/jquery.min.js"></script>
+  <script src="/semantic/semantic.min.js"></script>
+  <script>
+    $("#add_Btn").on("click", function (event) {
+      location.href = "country/new";
+    })
+  </script>
+</body>
+
+</html>

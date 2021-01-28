@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style>
+      html, body {
+        width:100%;
+        height:100%;
+      }
+      html, body, div, span, input {
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+      }
+      body {
+        display:flex;
+        flex-direction: column;
+      }
+      #chat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap:nowrap;
+        align-items:stretch;
+      }
+      #chat-content {
+        width:500px;
+        overflow:auto;
+      }
+      .chatmsg {
+        display:inline-block;
+        width:100%;
+        padding:2px;
+      }
+      .chatmsg:nth-child(2n-1) {
+        background-color:rgb(128,128,128);
+      }
+      .chatmsg:nth-child(2n) {
+        background-color:rgb(192,192,192);
+      }
+      #chat-input {
+        background-color:grey;
+        padding:5px;
+        display:flex;
+      }
+      #chat-input > input[type=text] {
+        flex-grow:1;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <header class="header"></header>
+    <main class=".container">
+      <article id="scoreinfo">
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+        <div class="userinfo">
+          asdfasdfasdfasdf
+        </div>
+      </article>
+      <article id="animecontent">
+        <div>
+          <div>
+
+          </div>
+          <div>
+
+          </div>
+        </div>
+      </article>
+      <aside>
+        <div id="chat-container">
+          <div>
+            <div id="chat-content">
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+              <span class="chatmsg">
+                123456798
+              </span>
+            </div>
+            <div id="chat-input">
+              <input type="text" placeholder="글을 입력해 주세요">
+              <input type="button" value="보내기">
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+    <footer class="footer">
+
+    </footer>
+  </body>
+</html>

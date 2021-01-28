@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/semantic/semantic.min.css">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+  <div class="ui main text container">
+    <div class="ui divided items">
+      <% if(posts == null || posts.length == 0){ %>
+        항목이 없습니다.
+      <% } %>
+      <% posts.forEach(function(post) { %>
+      <div class="item">
+        <div class="image">
+          <img src="<%= post.coverimg[0].src %>" class="thumbimg">
+        </div>
+        <div class="content">
+          <a class="header" href="/producer/<%= post._id %>"><%= post.title.ko %></a>
+          <div class="meta">
+            <%if(post.title.jp) {%>
+            <span class="jptitle"><%= post.title.jp %></span>
+            <%}%>
+          </div>
+          <div class="description">
+            <p><%= post.description %></p>
+          </div>
+          <%if(post.tags) {%>
+          <div class="extra">
+            <% post.tags.forEach(function(tag) { %>
+            <div class="ui label"><%= tag %></div>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <input type="button" class="ui primary button" value="추가" id="add_Btn">
+  </div>
+
+  <script src="/js/jquery.min.js"></script>
+  <script src="/semantic/semantic.min.js"></script>
+  <script>
+    $("#add_Btn").on("click", function (event) {
+      location.href = "/producer/new";
+    })
+  </script>
+</body>
+
+</html>

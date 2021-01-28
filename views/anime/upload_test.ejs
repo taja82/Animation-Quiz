@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CSS Template</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/semantic/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
+        .drag-over {
+            background-color: #ff0;
+        }
+
+        #thumbnails {
+            display:flex;
+            fleX-direction:row;
+            overflow-x:auto;
+            height:230px;
+        }
+
+        .thumb {
+            height: 200px;
+            padding: 5px;
+            /*float: left;*/
+            /*flex-direction: column;*/
+            /*flex: 0 0 auto;*/
+            position: relative;
+            display:flex;
+        }
+
+        .thumb img {
+            height: 100%;
+        }
+
+        .thumb>progress {
+            width: 100%;
+        }
+
+        .thumb>.close {
+            position: absolute;
+            background-color: red;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        #img_uploader {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow-x: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .img-progress {
+            width: 50%;
+        }
+
+        .progress-text {
+            text-align: center !important;
+            right: 0 !important;
+            left: 0 !important;
+        }
+
+        .progress-text>progress {
+            width: 50%;
+        }
+
+        #drop p {
+            word-break: break-all;
+        }
+
+        /*.close {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }*/
+        .modals .content img {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="file" accept="image/gif, image/jpeg, image/png" multiple id="img_uploader">
+    <input type="button" id="btnSubmit" value="업로드" />
+    <label for="img_uploader" class="image_">
+        <div id="drop" class="ui segment">
+            </p>
+            이미지를 끌어놓거나, 클릭하시죠
+            <div class='ui indicating progress' data-total="100" data-percent="0" id="progress_all">
+                <div class='bar'>
+                    <div class='progress progress-text'></div>
+                </div>
+                <div class="label">파일을 업로드 해주세요</div>
+            </div>
+            <div id="thumbnails">
+
+            </div>
+        </div>
+    </label>
+
+    <div id="result"></div>
+
+    <div class="ui basic modal">
+        <div class="content">
+            <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+        </div>
+    </div>
+
+    <script>
+        $('.thumb').on('click', function () {
+            $('.thumb').stop(true).css({ 'display': 'block', 'opacity': 0 }).animate({ 'opacity': 0.5 }, 300);
+        });
+        $('.thumb').on('click', function () {
+            $('.thumb').stop(true).animate({ 'opacity': 0 }, 300, function () {
+                $(this).css({ 'display': 'none' })
+            });
+        });
+    </script>
+    <script src="/semantic/semantic.min.js"></script>
+    <script>
+    //$('#progress_all').progress(50);
+    //$("#progress_all").progress({percent:30});
+    </script>
+    <script>
+        String.prototype.trunc = String.prototype.trunc ||
+            function (n) {
+                return (this.length > n) ? this.substr(0, n - 1) + '…' : this;
+            };
+    </script>
+    <script>
+        var files;
+        $("#img_uploader").change(function (e) {
+            //console.log(e.originalEvent);
+            var myFile = $('#img_uploader').prop('files');
+            //console.log(myFile)
+
+            //alert($('input[type=file]')[0].files[0].name); //파일이름
+            //alert($("#m_file")[0].files[0].type); // 파일 타임
+            //alert($("#m_file")[0].files[0].size); // 파일 크기
+            //  $('input[type=file]')[0].files[0].name;
+            //  $("#imgUpload")[0].files[0].type;
+            //  $("#imgUpload")[0].files[0].size;
+
+            files = myFile;
+            image_check(files);
+        });
+
+        function image_check(files) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                //console.log(file);
+                const image_type = ['image/gif', 'image/jpeg', 'image/png'];
+
+                if (file.size >= 1024 * 1024 * 5) {
+                    alert("5MB이상인 파일은 업로드 할 수 없습니다.");
+                    continue;
+                }
+                if (image_type.includes(file.type)) {
+                    var size = uploadFiles.push(file);
+                    preview(file, size - 1);
+                } else {
+                    alert("이미지 파일만 업로드 할 수 있습니다.");
+                    continue;
+                }
+            }
+            console.log(files);
+        }
+
+
+        var uploadFiles = [];
+        var $drop = $("#drop");
+        $drop.on("dragenter", function (e) { //드래그 요소가 들어왔을떄
+            $(this).addClass('drag-over');
+        }).on("dragleave", function (e) { //드래그 요소가 나갔을때
+            $(this).removeClass('drag-over');
+        }).on("dragover", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }).on('drop', function (e) {
+            e.preventDefault();
+            $(this).removeClass('drag-over');
+            files = e.originalEvent.dataTransfer.files;
+            image_check(files);
+        });
+        function preview(file, idx) {
+            var reader = new FileReader();
+            reader.onload = (function (f, idx) {
+                return function (e) {
+                    //var html = "<div class='thumb'><div class='img-progress'><progress value='0' max='100></progress></div><button class='compact icon mini ui red button close' data-idx='" + idx + "'><i class='times icon'></i></button>"
+                    var $div = $(
+                        '<div class="thumb"> \
+                            <div style="display:flex;align-items:center;justify-content:center;"> \
+                                <div class="ui tiny progress img-progress"> \
+                                    <div class="bar"></div> \
+                                </div>\
+                            </div>\
+                            <div>\
+                                <button class="compact icon mini ui red button close" data-idx="' + idx + '"><i class="times icon"></i></button>\
+                                <img src="' + e.target.result + '" title="' + escape(f.name) + '"> \
+                            </div>\
+                        </div>'
+                    );
+                    $("#thumbnails").append($div);
+                    f.target = $div;
+                };
+            })(file, idx);
+            reader.readAsDataURL(file);
+        }
+        var mode = 0; //0:여러 파일을 한번에 업로드, 1:여러 파일을 각각 차례대로 업로드
+        var uploadStatus = {
+            total: 0,
+            count: 0
+        };
+
+        $("#btnSubmit").on("click", function (e) {
+            if (mode == 0) {
+                if (uploadFiles.length != 0) {
+                    groupUpload();
+                }
+            } else if (mode == 1) {
+                $.each(uploadFiles, function (i, file) {
+                    if (file.upload != 'disable')
+                        uploadStatus.total++;
+                });
+                //console.log(uploadFiles);
+                if (uploadFiles.length != 0) {
+                    eachUpload();
+                }
+            }
+            if (uploadFiles.length == 0) {
+                alert("업로드 할 파일이 없습니다.");
+            }
+        });
+
+        function autoscroll(obj, index) {//현재 업로드 중인 이미지로 포커싱 구현용
+            $(obj).parent().animate({
+                scrollLeft: $(obj).eq(index).position().left
+            }, 500, function () {
+                //callback
+            });
+        }
+
+
+        //전체파일 한번에 업로드
+        function groupUpload() {
+            var formData = new FormData();
+            $.each(uploadFiles, function (i, file) {
+                if (file.upload != 'disable')
+                    formData.append('file', file, file.name);
+            });
+            $.ajax({
+                url: '/anime/img_upload',
+                data: formData,
+                type: 'post',
+                contentType: false,
+                processData: false,
+                xhr: function () { //XMLHttpRequest 재정의 가능
+                    var xhr = $.ajaxSettings.xhr();
+                    xhr.upload.onprogress = function (e) { //progress 이벤트 리스너 추가
+                        var percent = e.loaded * 100 / e.total;
+                        setProgress(percent);
+                    };
+                    return xhr;
+                },
+                success: function (ret) {
+                    $('#progress_all .label').text("완료");
+                }
+            });
+        }
+        //개별 파일 업로드
+        function eachUpload() {
+            var file = uploadFiles.shift();
+            if (!file) {
+                //setTimeout(alert.bind(null, '완료'), 300);
+                if (uploadStatus.count / uploadStatus.total == 1) {
+                    $('#progress_all .label').text("완료");
+                }
+                return;
+            }
+            if (file.upload == 'disable') {
+                eachUpload();
+                return;
+            }
+            var formData = new FormData();
+            formData.append('file', file, file.name);
+            console.log(formData.get('file'));
+            console.log(formData.getAll('file'));
+            console.log(file);
+
+            var $selfProgress = file.target.find(".img-progress"); //File 객체에 저장해둔 프리뷰 DOM의 progress 요소를 찾는다.
+            console.log($selfProgress);
+            $.ajax({
+                url: '/anime/img_upload',
+                data: formData,
+                type: 'post',
+                contentType: false,
+                processData: false,
+                xhr: function () { //XMLHttpRequest 재정의 가능
+                    var xhr = $.ajaxSettings.xhr();
+                    //console.log(xhr);
+                    xhr.upload.onprogress = function (e) { //progress 이벤트 리스너 추가
+                        //console.log(e);
+                        var percent = e.loaded * 100 / e.total;
+                        $selfProgress.progress({ percent: percent }) //개별 파일의 프로그레스바 진행
+                        console.log(percent);
+                    };
+                    return xhr;
+                },
+                success: function (response) {
+                    //console.log(response);
+                    uploadStatus.count++;
+                    autoscroll(".thumb", uploadStatus.count - 1);
+                    setProgress(uploadStatus.count / uploadStatus.total * 100); //전체 프로그레스바 진행
+
+                    //$(".bar").css("width", uploadStatus.count / uploadStatus.total * 100 + "%");
+                    //$("bar").css("width","30%");
+                    //$('#progress_all').progress(uploadStatus.count / uploadStatus.total * 100);
+                    console.log(uploadStatus.count);
+
+                    $("#progress_all").progress({ percent: (uploadStatus.count / uploadStatus.total * 100) });
+                    $('#progress_all .label').text(file.name.trunc(30) + "업로드 중.. " + "(" + uploadStatus.count + " / " + uploadStatus.total + ")");
+                    setTimeout(eachUpload, 500); //다음 파일 업로드
+                    if (response.response.resultCode == 0) {
+                        console.log(response.response);
+                        $("#progress_all .label").text("에러 발생");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        function setProgress(per) {
+            $("#progress_all").progress({ percent: (per) });
+            //$("#progress_all").progress({ percent: (uploadStatus.count / uploadStatus.total * 100) });
+            //$progressBar.val(per);
+        }
+        $("#thumbnails").on("click", ".close", function (e) {//이미지 삭제
+            e.stopPropagation();
+            e.preventDefault();
+            console.log(e);
+            //var $target = $(e.target);
+            var $target = $(e.currentTarget);
+            console.log($target);
+            var idx = $target.attr('data-idx');
+            console.log(idx);
+            uploadFiles[idx].upload = 'disable';
+            $target.parent().remove();
+        });
+    </script>
+    <script>
+        $("#thumbnails").on("click", ".thumb", function (event) {//모달로 이미지 크게 보기
+            event.preventDefault();
+            console.log($(this).children("img")[0].outerHTML);
+            $(".modal > .content").html($(this).children("img")[0].outerHTML);
+            $(".ui.basic.modal").modal('show');
+
+        })
+    </script>
+</body>
+
+</html>
